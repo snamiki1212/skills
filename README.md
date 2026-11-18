@@ -30,28 +30,31 @@ skills/
 ## 参照の仕方
 
 APM のマニフェストに、skill 単位で git 依存として書く。
-版は git の SHA で固定する。
+ref には SHA かブランチを書く。
 
 ```yaml
 dependencies:
   apm:
-    - snamiki1212/skills/skills/mywriting#<sha>
-    - snamiki1212/skills/skills/mycoding#<sha>
+    - snamiki1212/skills/skills/mywriting#main   # main に追随する
+    - snamiki1212/skills/skills/mycoding#<sha>   # 版を固定する
 ```
 
 リリースタグは付けない。
 複数の skill が独立に変わるため、リポジトリ全体に付けたタグは個々の skill の版を表さないからである。
 
-参照側は、SHA を書き換えて再インストールすることで更新する。
+`main` に追随する参照側は、ref を解決し直して再インストールすることで更新する（APM なら `apm install --refresh`）。
+SHA で固定する参照側は、SHA を書き換えてから再インストールする。
 
 ## 変更の流れ
 
 1. このリポジトリで skill を編集し、PR を経て `main` へマージする。
-2. 参照側のマニフェストの SHA を書き換える。
-3. 参照側で再インストールして配布する。
+2. 参照側で取り込み直して配布する。
+
+`main` へのマージは、`main` に追随する参照側にとってそのままリリースになる。
+マージする前に、その状態で配布されてよいかを確かめる。
 
 編集を往復している間は、参照側の該当行をローカル clone の絶対パスへ一時的に差し替えると速い。
-内容が固まってから SHA 固定の形に戻す。
+内容が固まってから元の形に戻す。
 
 ## 経緯
 
